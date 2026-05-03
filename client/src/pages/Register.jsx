@@ -44,10 +44,10 @@ export default function Register() {
 
         {/* Form */}
         <div className="flex flex-col justify-center flex-1 max-w-sm w-full mx-auto py-12">
-          <h1 className="text-4xl md:text-5xl font-semibold text-blue-600 mb-2">
+          <h1 className="bg-[linear-gradient(90deg,_#61a0f4_0%,_#004aad_100%)] bg-clip-text text-transparent text-4xl md:text-5xl font-semibold text-blue-600 mb-2">
             Create new Account
           </h1>
-          <p className="text-gray-400 text-sm mb-8">
+          <p className="text-sm mb-8">
             Already Registered?{" "}
             <Link
               to="/login"
@@ -65,9 +65,7 @@ export default function Register() {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                Name
-              </label>
+              <label className="text-xs uppercase tracking-widest">Name</label>
               <input
                 name="name"
                 type="text"
@@ -75,14 +73,12 @@ export default function Register() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white"
+                className="border border-black px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                Email
-              </label>
+              <label className="text-xs uppercase tracking-widest">Email</label>
               <input
                 name="email"
                 type="email"
@@ -90,12 +86,12 @@ export default function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white"
+                className="border border-black px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+              <label className="text-xs uppercase tracking-widest">
                 Password
               </label>
               <input
@@ -105,14 +101,14 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white"
+                className="border border-black px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="bg-blue-500 hover:bg-blue-600 transition-all text-white font-semibold py-3 rounded-lg w-full mt-2 disabled:opacity-60 shadow-md"
+              className="bg-[linear-gradient(90deg,_#61a0f4_0%,_#004aad_100%)] hover:bg-blue-600 transition-all text-white font-semibold py-3 w-auto mt-2 disabled:opacity-60 shadow-md"
             >
               {loading ? "Creating account..." : "Sign Up"}
             </button>
