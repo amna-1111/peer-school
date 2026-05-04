@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 import { useAuth } from "../hooks/useAuth";
 import { NavLink } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -32,6 +33,9 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
+      <Helmet>
+        <title>Login - PeerSchool</title>
+      </Helmet>
       {/* LEFT SIDE */}
       <div className="w-full md:w-1/2 bg-gray-50 flex flex-col p-8 md:p-12">
         {/* Logo — top left */}

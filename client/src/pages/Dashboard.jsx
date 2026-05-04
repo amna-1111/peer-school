@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getDashboard } from "../api/userApi";
+import { Helmet } from "react-helmet-async";
 
 const STATUS_COLORS = {
   Pending: "#f59e0b",

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link, NavLink } from "react-router-dom";
 import { registerUser } from "../api/authApi";
 import { useAuth } from "../hooks/useAuth";
+import { Helmet } from "react-helmet-async";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
+      <Helmet>
+        <title>Registration - PeerSchool</title>
+      </Helmet>
       {/* LEFT SIDE */}
       <div className="w-full md:w-1/2 bg-gray-50 flex flex-col p-8 md:p-12">
         {/* Logo — top left */}
@@ -44,7 +48,7 @@ export default function Register() {
 
         {/* Form */}
         <div className="flex flex-col justify-center flex-1 max-w-sm w-full mx-auto py-12">
-          <h1 className="bg-[linear-gradient(90deg,_#61a0f4_0%,_#004aad_100%)] bg-clip-text text-transparent text-4xl md:text-5xl font-semibold text-blue-600 mb-2">
+          <h1 className="bg-[linear-gradient(90deg,_#61a0f4_0%,_#004aad_100%)] bg-clip-text text-transparent text-4xl md:text-5xl font-normal text-blue-600 mb-2">
             Create new Account
           </h1>
           <p className="text-sm mb-8">

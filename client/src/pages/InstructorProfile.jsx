@@ -5,6 +5,7 @@ import { getInstructorSkills } from "../api/skillApi";
 import { getAvailableSlots } from "../api/sessionApi";
 import { useAuth } from "../hooks/useAuth";
 import { getInstructorReviews } from "../api/reviewApi";
+import { Helmet } from "react-helmet-async";
 
 export default function InstructorProfile() {
   const { id } = useParams();

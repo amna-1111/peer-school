@@ -26,7 +26,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 md:px-12 py-4 flex items-center justify-between shadow-md">
+    <nav className="bg-[radial-gradient(at_50%_50%,_#61a0f4_0%,_#1064d4_100%)] from-blue-500 to-blue-600 px-6 md:px-12 py-4 flex items-center justify-between shadow-md">
       {/* Logo */}
       <div
         onClick={() => navigate(user ? "/dashboard" : "/")}

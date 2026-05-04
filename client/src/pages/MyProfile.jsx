@@ -7,6 +7,7 @@ import {
   deleteSlot as removeSlot,
   getAvailableSlots
 } from "../api/sessionApi";
+import { Helmet } from "react-helmet-async";
 
 const CATEGORIES = [
   "Programming",

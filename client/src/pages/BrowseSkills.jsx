@@ -13,6 +13,7 @@ const CATEGORIES = [
   "Business",
   "Other"
 ];
+import { Helmet } from "react-helmet-async";
 
 export default function BrowseSkills() {
   const navigate = useNavigate();

@@ -8,6 +8,7 @@ const STATUS_COLORS = {
   Completed: "#10b981",
   Cancelled: "#ef4444"
 };
+import { Helmet } from "react-helmet-async";
 
 export default function MySessions() {
   const [learning, setLearning] = useState([]);
