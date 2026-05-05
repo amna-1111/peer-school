@@ -210,7 +210,7 @@ export default function MyProfile() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>PeerSchool — My Profile</title>
+        <title>My Profile - PeerSchool</title>
       </Helmet>
 
       {/* Header */}
