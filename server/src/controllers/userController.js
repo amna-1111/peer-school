@@ -52,4 +52,20 @@ const getDashboard = async (req, res, next) => {
   }
 };
 
-module.exports = { getUserProfile, updateProfile, getDashboard };
+// POST /api/users/upload-photo
+const uploadPhoto = async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+    const imageUrl = `/uploads/${req.file.filename}`;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { profilePhoto: imageUrl },
+      { new: true }
+    ).select("-password");
+    res.json({ profilePhoto: user.profilePhoto });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getUserProfile, updateProfile, getDashboard, uploadPhoto };
