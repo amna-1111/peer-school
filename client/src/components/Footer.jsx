@@ -9,8 +9,9 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand Section */}
-          <div className="col-span-1 md:col-span-1">
-            <div
+          <div className="col-span-1 md:col-span-1 flex flex-col items-start justify-start">
+            {" "}
+            {/* <div
               className="flex items-center gap-2 mb-4 cursor-pointer"
               onClick={() => navigate("/")}
             >
@@ -20,8 +21,20 @@ export default function Footer() {
               <span className="text-xl font-black text-gray-800 tracking-tighter">
                 PeerSchool
               </span>
+            </div> */}
+            <div
+              onClick={() => navigate("/")}
+              className="cursor-pointer mb-4 mt-0 flex items-start"
+            >
+              <div className="flex items-center gap-2 group">
+                <img
+                  src="/footer_logo.png"
+                  alt="favicon"
+                  className="w-48 md:w-64 h-auto object-contain -mt-4"
+                />
+              </div>
             </div>
-            <p className="text-gray-500 text-sm leading-relaxed">
+            <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
               The world’s first community-driven platform for peer-to-peer skill
               sharing. Learn anything, teach everything.
             </p>
