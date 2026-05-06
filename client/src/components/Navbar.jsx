@@ -24,13 +24,14 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "HOME", path: "/" },
-    { label: "BROWSE", path: "/skills" },
+
     ...(user
       ? [
+          { label: "DASHBOARD", path: "/dashboard" },
           { label: "MY SESSIONS", path: "/sessions" }
-          //{ label: "Profile", path: "/profile" }
         ]
-      : [])
+      : []),
+    { label: "BROWSE", path: "/skills" }
   ];
 
   return (

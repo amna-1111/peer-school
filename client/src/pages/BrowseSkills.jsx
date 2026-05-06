@@ -149,7 +149,7 @@ export default function BrowseSkills() {
             {skills.map((skill) => (
               <div
                 key={skill._id}
-                onClick={() => navigate(`/instructor/${skill.instructor._id}`)}
+                onClick={() => navigate(`/skill/${skill._id}`)}
                 className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg hover:border-blue-100 transition-all cursor-pointer group"
               >
                 {/* Top row */}
@@ -184,7 +184,7 @@ export default function BrowseSkills() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-gray-400">
+                  {/* <div className="flex items-center gap-1 text-xs text-gray-400">
                     <svg
                       className="w-3.5 h-3.5"
                       fill="none"
@@ -199,7 +199,7 @@ export default function BrowseSkills() {
                       />
                     </svg>
                     {skill.durationMinutes} mins
-                  </div>
+                  </div> */}
                 </div>
               </div>
             ))}

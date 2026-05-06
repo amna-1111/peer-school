@@ -81,9 +81,23 @@ const deleteSkill = async (req, res, next) => {
   }
 };
 
+const getSkillById = async (req, res, next) => {
+  try {
+    const skill = await SkillListing.findById(req.params.id).populate(
+      "instructor",
+      "name avgRating profilePhoto bio totalSessionsTaught"
+    );
+    if (!skill) return res.status(404).json({ message: "Skill not found" });
+    res.json(skill);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getSkills,
   getSkillsByInstructor,
+  getSkillById,
   createSkill,
   updateSkill,
   deleteSkill

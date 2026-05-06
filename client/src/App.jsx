@@ -13,7 +13,11 @@ import BookSession from "./pages/BookSession";
 import MySessions from "./pages/MySessions";
 import MyProfile from "./pages/MyProfile";
 import Review from "./pages/Review";
+import SkillDetail from "./pages/SkillDetails";
+import FAQ from "./pages/FAQ";
+
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function AppContent() {
   const location = useLocation();
@@ -29,8 +33,10 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/skills" element={<BrowseSkills />} />
-        <Route path="/instructor/:id" element={<InstructorProfile />} />
+        <Route path="/skill/:skillId" element={<SkillDetail />} />
 
+        <Route path="/instructor/:id" element={<InstructorProfile />} />
+        <Route path="/faqs" element={<FAQ />} />
         {/* Protected */}
         <Route
           path="/dashboard"
@@ -74,6 +80,7 @@ function AppContent() {
           }
         />
       </Routes>
+      <Footer />
     </>
   );
 }

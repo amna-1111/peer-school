@@ -3,6 +3,7 @@ const AvailabilitySlot = require("../models/AvailabilitySlots");
 const SkillListing = require("../models/SkillListing");
 const User = require("../models/User");
 const sendEmail = require("../config/email");
+const crypto = require("crypto");
 
 // GET /api/sessions/slots/:instructorId — get available slots for an instructor
 const getAvailableSlots = async (req, res, next) => {
@@ -93,13 +94,37 @@ const bookSession = async (req, res, next) => {
     // Email to instructor
     await sendEmail({
       to: instructorUser.email,
-      subject: "New session booked on PeerSchool",
+      subject: "New session request — PeerSchool",
       html: `
-    <h2>You have a new booking!</h2>
-    <p><strong>${learnerUser.name}</strong> has booked a session with you.</p>
-    <p><strong>Skill:</strong> ${skillTitle}</p>
-    <p><strong>Time:</strong> ${slotTime}</p>
-    <p>Log in to PeerSchool to confirm the session.</p>
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #2563eb; padding: 24px; border-radius: 12px 12px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">New Booking Request!</h1>
+      </div>
+      <div style="padding: 24px; border: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+        <p style="color: #374151;"><strong>${learnerUser.name}</strong> wants to book a session with you.</p>
+        <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Skill</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${skillTitle}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Requested by</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${learnerUser.name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Time</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${slotTime}</td>
+          </tr>
+        </table>
+        <div style="text-align: center; margin-top: 20px;">
+          <p style="color: #6b7280;">Please log in to PeerSchool to accept or decline this request.</p>
+          <a href="http://localhost:5173/sessions"
+            style="background: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 8px;">
+            View Session Request →
+          </a>
+        </div>
+      </div>
+    </div>
   `
     });
 
@@ -176,6 +201,12 @@ const updateSessionStatus = async (req, res, next) => {
         message: "Only the instructor can confirm or complete sessions"
       });
 
+    // Generate meeting link when confirmed
+    if (status === "Confirmed" && !session.meetingLink) {
+      const roomId = crypto.randomBytes(6).toString("hex");
+      session.meetingLink = `https://meet.jit.si/peerscool-${roomId}`;
+    }
+
     session.status = status;
     await session.save();
 
@@ -193,13 +224,48 @@ const updateSessionStatus = async (req, res, next) => {
 
     const statusMessages = {
       Confirmed: {
-        subject: "Your session has been confirmed — PeerSchool",
+        subject: "Your session is confirmed — PeerSchool",
         html: `
-      <h2>Session Confirmed!</h2>
-      <p>Your session for <strong>${skillTitle}</strong> with <strong>${fullSession.instructor.name}</strong> has been confirmed.</p>
-      <p><strong>Time:</strong> ${slotTime}</p>
-      <p>Get ready to learn!</p>
-    `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #2563eb; padding: 24px; border-radius: 12px 12px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">Session Confirmed! 🎉</h1>
+      </div>
+      <div style="padding: 24px; border: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+        <p style="color: #374151;">Your session has been confirmed. Here are the details:</p>
+        <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Skill</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${skillTitle}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Instructor</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${fullSession.instructor.name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Learner</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${fullSession.learner.name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Date & Time</td>
+            <td style="padding: 8px 0; color: #111827; font-weight: 600;">${slotTime}</td>
+          </tr>
+        </table>
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-top: 16px; text-align: center;">
+          <p style="color: #1d4ed8; font-weight: 600; margin: 0 0 12px;">Join your session here:</p>
+          <a href="${fullSession.meetingLink}"
+            style="background: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
+            Join Meeting →
+          </a>
+          <p style="color: #6b7280; font-size: 12px; margin: 12px 0 0;">
+            ${fullSession.meetingLink}
+          </p>
+        </div>
+        <p style="color: #9ca3af; font-size: 12px; margin-top: 24px;">
+          No account needed — just click the link at the scheduled time.
+        </p>
+      </div>
+    </div>
+  `
       },
       Completed: {
         subject: "Session completed — PeerSchool",
@@ -224,6 +290,15 @@ const updateSessionStatus = async (req, res, next) => {
         to: fullSession.learner.email,
         ...statusMessages[status]
       });
+
+      // Also send to instructor when confirmed
+      if (status === "Confirmed") {
+        await sendEmail({
+          to: fullSession.instructor.email,
+          subject: "Session confirmed — PeerSchool",
+          html: statusMessages["Confirmed"].html
+        });
+      }
     }
 
     res.json(session);

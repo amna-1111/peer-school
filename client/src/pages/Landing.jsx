@@ -61,7 +61,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white font-sans">
       {/* Hero */}
-      <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 flex flex-col md:flex-row items-center gap-12">
+      <div className="max-w-6xl mx-auto px-6 pt-4 pb-16 md:pt-8 md:py-24 flex flex-col md:flex-row items-center gap-12">
         {/* Left text */}
         <div className="flex-1">
           <span className="inline-block bg-blue-100 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full mb-4 tracking-wide uppercase">
