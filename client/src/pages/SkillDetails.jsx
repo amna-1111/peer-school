@@ -66,7 +66,7 @@ export default function SkillDetail() {
         <div className="max-w-4xl mx-auto">
           <button
             onClick={() => navigate("/skills")}
-            className="text-blue-100 hover:text-white text-sm flex items-center gap-1 mb-4 transition-colors"
+            className="text-blue-100 hover:text-white text-sm font-bold mb-4 flex items-center gap-2 transition-colors"
           >
             ← Back to Browse
           </button>
