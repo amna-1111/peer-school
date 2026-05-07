@@ -10,8 +10,8 @@ const {
 const { protect } = require("../middleware/authMiddleware");
 
 router.get("/", getSkills);
-router.get("/:id", getSkillById);
 router.get("/instructor/:instructorId", getSkillsByInstructor);
+router.get("/:id", getSkillById);
 router.post("/", protect, createSkill);
 router.put("/:id", protect, updateSkill);
 router.delete("/:id", protect, deleteSkill);

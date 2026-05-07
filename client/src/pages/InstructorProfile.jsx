@@ -135,6 +135,24 @@ export default function InstructorProfile() {
               )}
             </div>
 
+            {/* Skills Wanted Section */}
+            {instructor.skillsWanted?.length > 0 && (
+              <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
+                <h3 className="text-xl font-bold text-gray-800 mb-6">
+                  Wants to Learn
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {instructor.skillsWanted.map((skill, i) => (
+                    <span
+                      key={i}
+                      className="bg-blue-50 text-blue-600 text-sm font-semibold px-4 py-2 rounded-full border border-blue-100"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
             {/* Reviews Section */}
             <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
               <h3 className="text-xl font-bold text-gray-800 mb-6 font-black uppercase tracking-tighter text-sm opacity-50">

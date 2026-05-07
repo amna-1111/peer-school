@@ -74,7 +74,7 @@ export default function Dashboard() {
             onClick={() => navigate("/skills")}
             className="bg-white text-blue-600 px-8 py-3 rounded-2xl font-bold shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
           >
-            🚀 <span className="text-sm">EXPLORE SKILLS</span>
+            <span className="text-sm">EXPLORE SKILLS</span>
           </button>
         </div>
       </div>

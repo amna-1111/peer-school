@@ -72,8 +72,16 @@ export default function Navbar() {
               onClick={() => navigate("/profile")}
               className="flex items-center gap-2 text-white text-sm font-medium hover:bg-blue-400 px-3 py-2 rounded-full transition-all"
             >
-              <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow">
-                {user.name?.charAt(0).toUpperCase()}
+              <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow overflow-hidden">
+                {user.profilePhoto ? (
+                  <img
+                    src={`http://localhost:5000${user.profilePhoto}`}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  user.name?.charAt(0).toUpperCase()
+                )}
               </div>
               <span>{user.name}</span>
             </button>

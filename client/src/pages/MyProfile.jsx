@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { getProfile, updateProfile, uploadPhoto } from "../api/userApi";
-import { getInstructorSkills, createSkill, deleteSkill } from "../api/skillApi";
+import {
+  getInstructorSkills,
+  createSkill,
+  deleteSkill,
+  updateSkill
+} from "../api/skillApi";
 import {
   addSlot,
   deleteSlot as removeSlot,
@@ -35,7 +40,7 @@ const CATEGORY_COLORS = {
 };
 
 export default function MyProfile() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const fileInputRef = useRef(null);
   const [profile, setProfile] = useState({
     name: "",
@@ -48,9 +53,11 @@ export default function MyProfile() {
   const [newSkill, setNewSkill] = useState({
     title: "",
     category: "Programming",
-    description: "",
-    durationMinutes: 60
+    description: ""
+    //durationMinutes: 60
   });
+  const [editingSkill, setEditingSkill] = useState(null); // holds skill being edited
+
   const [message, setMessage] = useState({ text: "", type: "" });
   const [activeTab, setActiveTab] = useState("profile");
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -84,12 +91,15 @@ export default function MyProfile() {
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     setPhotoPreview(URL.createObjectURL(file));
     setUploadingPhoto(true);
+
     try {
       const formData = new FormData();
       formData.append("photo", file);
-      await uploadPhoto(formData);
+      const { data } = await uploadPhoto(formData);
+      updateUser({ profilePhoto: data.profilePhoto }); // sync to auth context
       showMessage("Photo updated!");
     } catch {
       showMessage("Failed to upload photo", "error");
@@ -100,7 +110,8 @@ export default function MyProfile() {
 
   const handleProfileSave = async () => {
     try {
-      await updateProfile(profile);
+      const { data } = await updateProfile(profile);
+      updateUser({ name: data.name }); // Update global state
       showMessage("Profile updated!");
     } catch {
       showMessage("Failed to update profile", "error");
@@ -131,8 +142,8 @@ export default function MyProfile() {
       setNewSkill({
         title: "",
         category: "Programming",
-        description: "",
-        durationMinutes: 60
+        description: ""
+        //durationMinutes: 60
       });
       showMessage("Skill added!");
     } catch {
@@ -146,6 +157,23 @@ export default function MyProfile() {
       setSkills(skills.filter((s) => s._id !== id));
     } catch {
       showMessage("Failed to delete skill", "error");
+    }
+  };
+
+  const handleUpdateSkill = async () => {
+    if (!editingSkill.title.trim()) return;
+    try {
+      const { data } = await updateSkill(editingSkill._id, {
+        title: editingSkill.title,
+        category: editingSkill.category,
+        description: editingSkill.description,
+        durationMinutes: editingSkill.durationMinutes
+      });
+      setSkills(skills.map((s) => (s._id === data._id ? data : s)));
+      setEditingSkill(null);
+      showMessage("Skill updated!");
+    } catch {
+      showMessage("Failed to update skill", "error");
     }
   };
 
@@ -446,7 +474,7 @@ export default function MyProfile() {
                     className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all resize-none"
                   />
                 </div>
-                <div className="flex flex-col gap-1">
+                {/* <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
                     Duration (minutes)
                   </label>
@@ -461,7 +489,7 @@ export default function MyProfile() {
                     }
                     className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
                   />
-                </div>
+                </div> */}
               </div>
               <button
                 onClick={handleAddSkill}
@@ -498,9 +526,17 @@ export default function MyProfile() {
                       {skill.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-400">
+                      {/* <span className="text-xs text-gray-400">
                         {skill.durationMinutes} mins
-                      </span>
+                      </span> */}
+
+                      <button
+                        onClick={() => setEditingSkill({ ...skill })}
+                        className="text-xs text-blue-500 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        Edit
+                      </button>
+
                       <button
                         onClick={() => handleDeleteSkill(skill._id)}
                         className="text-xs text-red-400 hover:text-red-600 font-medium transition-colors"
@@ -629,6 +665,96 @@ export default function MyProfile() {
                   setShowSlotModal(false);
                   setNewSlot({ startTime: "", endTime: "" });
                 }}
+                className="flex-1 border border-gray-200 text-gray-500 hover:bg-gray-50 font-medium py-2.5 rounded-xl transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Skill Modal */}
+      {editingSkill && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold text-gray-800 mb-5">
+              Edit Skill
+            </h3>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                  Title
+                </label>
+                <input
+                  value={editingSkill.title}
+                  onChange={(e) =>
+                    setEditingSkill({ ...editingSkill, title: e.target.value })
+                  }
+                  className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                  Category
+                </label>
+                <select
+                  value={editingSkill.category}
+                  onChange={(e) =>
+                    setEditingSkill({
+                      ...editingSkill,
+                      category: e.target.value
+                    })
+                  }
+                  className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 bg-white"
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                  Description
+                </label>
+                <textarea
+                  value={editingSkill.description}
+                  onChange={(e) =>
+                    setEditingSkill({
+                      ...editingSkill,
+                      description: e.target.value
+                    })
+                  }
+                  rows={3}
+                  className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 resize-none"
+                />
+              </div>
+              {/* <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                  Duration (minutes)
+                </label>
+                <input
+                  type="number"
+                  value={editingSkill.durationMinutes}
+                  onChange={(e) =>
+                    setEditingSkill({
+                      ...editingSkill,
+                      durationMinutes: e.target.value
+                    })
+                  }
+                  className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                />
+              </div> */}
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={handleUpdateSkill}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl transition-all"
+              >
+                Save Changes
+              </button>
+              <button
+                onClick={() => setEditingSkill(null)}
                 className="flex-1 border border-gray-200 text-gray-500 hover:bg-gray-50 font-medium py-2.5 rounded-xl transition-all"
               >
                 Cancel
