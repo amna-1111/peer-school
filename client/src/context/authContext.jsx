@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import api from "../api/axios";
 
 export const AuthContext = createContext(null);
 
@@ -8,10 +9,28 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // On refresh, restore user from localStorage
     const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
-    setLoading(false);
+    const savedToken = localStorage.getItem("token");
+    if (savedUser && savedToken) {
+      const parsed = JSON.parse(savedUser);
+      setUser(parsed);
+      // Refresh user data from server to get latest profilePhoto etc.
+      api
+        .get(`/users/${parsed.id}`)
+        .then(({ data }) => {
+          const updated = {
+            ...parsed,
+            profilePhoto: data.profilePhoto,
+            name: data.name
+          };
+          setUser(updated);
+          localStorage.setItem("user", JSON.stringify(updated));
+        })
+        .catch(() => {}) // fail silently
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const login = (userData, jwtToken) => {
