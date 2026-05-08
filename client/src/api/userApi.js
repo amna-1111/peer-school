@@ -7,3 +7,4 @@ export const uploadPhoto = (formData) =>
   api.post("/users/upload-photo", formData, {
     headers: { "Content-Type": "multipart/form-data" }
   });
+export const changePassword = (data) => api.put("/users/change-password", data);

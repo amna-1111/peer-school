@@ -68,4 +68,33 @@ const uploadPhoto = async (req, res, next) => {
   }
 };
 
-module.exports = { getUserProfile, updateProfile, getDashboard, uploadPhoto };
+// PUT /api/users/change-password
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id);
+
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch)
+      return res.status(400).json({ message: "Current password is incorrect" });
+
+    if (newPassword.length < 6)
+      return res
+        .status(400)
+        .json({ message: "New password must be at least 6 characters" });
+
+    user.password = newPassword;
+    await user.save(); // pre-save hook will hash it
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getUserProfile,
+  updateProfile,
+  getDashboard,
+  uploadPhoto,
+  changePassword
+};

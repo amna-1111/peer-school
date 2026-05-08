@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { getProfile, updateProfile, uploadPhoto } from "../api/userApi";
+import {
+  getProfile,
+  updateProfile,
+  uploadPhoto,
+  changePassword
+} from "../api/userApi";
 import {
   getInstructorSkills,
   createSkill,
@@ -67,6 +72,17 @@ export default function MyProfile() {
   const [showSlotModal, setShowSlotModal] = useState(false);
   const [newSlot, setNewSlot] = useState({ startTime: "", endTime: "" });
   const [selectedSlotDate, setSelectedSlotDate] = useState(null);
+
+  // for password change
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+  const [passwordMessage, setPasswordMessage] = useState({
+    text: "",
+    type: ""
+  });
 
   useEffect(() => {
     if (!user) return;
@@ -216,6 +232,31 @@ export default function MyProfile() {
     const endStr = moment(end).format("YYYY-MM-DDTHH:mm");
     setNewSlot({ startTime: startStr, endTime: endStr });
     setShowSlotModal(true);
+  };
+
+  const handleChangePassword = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordMessage({ text: "New passwords do not match", type: "error" });
+      return;
+    }
+    try {
+      await changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      });
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      });
+      setPasswordMessage({ text: "Password updated!", type: "success" });
+      setTimeout(() => setPasswordMessage({ text: "", type: "" }), 3000);
+    } catch (err) {
+      setPasswordMessage({
+        text: err.response?.data?.message || "Failed to update password",
+        type: "error"
+      });
+    }
   };
 
   // Convert slots to calendar events
@@ -418,6 +459,79 @@ export default function MyProfile() {
               >
                 Save Changes
               </button>
+            </div>
+
+            {/* Change Password */}
+            <div className="mt-8 pt-8 border-t border-gray-100">
+              <h3 className="text-base font-semibold text-gray-800 mb-4">
+                Change Password
+              </h3>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData.currentPassword}
+                    onChange={(e) =>
+                      setPasswordData({
+                        ...passwordData,
+                        currentPassword: e.target.value
+                      })
+                    }
+                    placeholder="••••••"
+                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData.newPassword}
+                    onChange={(e) =>
+                      setPasswordData({
+                        ...passwordData,
+                        newPassword: e.target.value
+                      })
+                    }
+                    placeholder="••••••"
+                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData.confirmPassword}
+                    onChange={(e) =>
+                      setPasswordData({
+                        ...passwordData,
+                        confirmPassword: e.target.value
+                      })
+                    }
+                    placeholder="••••••"
+                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                  />
+                </div>
+                {passwordMessage.text && (
+                  <p
+                    className={`text-sm font-medium ${passwordMessage.type === "error" ? "text-red-500" : "text-green-500"}`}
+                  >
+                    {passwordMessage.text}
+                  </p>
+                )}
+                <button
+                  onClick={handleChangePassword}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-md w-fit"
+                >
+                  Update Password
+                </button>
+              </div>
             </div>
           </div>
         )}
