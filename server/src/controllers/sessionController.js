@@ -128,18 +128,18 @@ const bookSession = async (req, res, next) => {
   `
     });
 
-    // Email to learner
-    await sendEmail({
-      to: learnerUser.email,
-      subject: "Session booked — PeerSchool",
-      html: `
-    <h2>Your session is booked!</h2>
-    <p>You have successfully booked a session with <strong>${instructorUser.name}</strong>.</p>
-    <p><strong>Skill:</strong> ${skillTitle}</p>
-    <p><strong>Time:</strong> ${slotTime}</p>
-    <p>You will be notified once the instructor confirms.</p>
-  `
-    });
+    //   // Email to learner
+    //   await sendEmail({
+    //     to: learnerUser.email,
+    //     subject: "Session booked — PeerSchool",
+    //     html: `
+    //   <h2>Your session is booked!</h2>
+    //   <p>You have successfully booked a session with <strong>${instructorUser.name}</strong>.</p>
+    //   <p><strong>Skill:</strong> ${skillTitle}</p>
+    //   <p><strong>Time:</strong> ${slotTime}</p>
+    //   <p>You will be notified once the instructor confirms.</p>
+    // `
+    //   });
 
     // Update stats
     await User.findByIdAndUpdate(req.user.id, {
@@ -270,17 +270,47 @@ const updateSessionStatus = async (req, res, next) => {
       Completed: {
         subject: "Session completed — PeerSchool",
         html: `
-      <h2>Session Completed!</h2>
-      <p>Your session for <strong>${skillTitle}</strong> has been marked as completed.</p>
-      <p>Don't forget to leave a review for <strong>${fullSession.instructor.name}</strong>!</p>
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #059669; padding: 24px; border-radius: 12px 12px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">Session Complete! 🎓</h1>
+      </div>
+      <div style="padding: 24px; border: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+        <p style="color: #374151;">Great job! You've finished your session on <strong>${skillTitle}</strong>.</p>
+        <p style="color: #4b5563; font-size: 15px;">We hope you had a fantastic learning experience with <strong>${fullSession.instructor.name}</strong>. Feedback helps our community grow!</p>
+        
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="https://your-platform.com/reviews/${fullSession._id}" 
+            style="background: #059669; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
+            Leave a Review
+          </a>
+        </div>
+        
+        <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+          Keep the momentum going! Check out more skills on PeerSchool.
+        </p>
+      </div>
+    </div>
     `
       },
+
       Cancelled: {
         subject: "Session cancelled — PeerSchool",
         html: `
-      <h2>Session Cancelled</h2>
-      <p>Your session for <strong>${skillTitle}</strong> on ${slotTime} has been cancelled.</p>
-      <p>You can browse other skills and book a new session anytime.</p>
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #dc2626; padding: 24px; border-radius: 12px 12px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">Session Cancelled</h1>
+      </div>
+      <div style="padding: 24px; border: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+        <p style="color: #374151;">Your session for <strong>${skillTitle}</strong> scheduled for <strong>${slotTime}</strong> has been cancelled.</p>
+
+        <div style="text-align: center; margin-top: 24px;">
+          <a href="https://your-platform.com/skills" 
+            style="color: #2563eb; text-decoration: none; font-weight: 600;">
+            Browse other available sessions →
+          </a>
+        </div>
+      </div>
+    </div>
     `
       }
     };
