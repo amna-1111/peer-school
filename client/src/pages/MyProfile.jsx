@@ -168,6 +168,10 @@ export default function MyProfile() {
   };
 
   const handleDeleteSkill = async (id) => {
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this skill?"
+    );
+    if (!confirmation) return;
     try {
       await deleteSkill(id);
       setSkills(skills.filter((s) => s._id !== id));
