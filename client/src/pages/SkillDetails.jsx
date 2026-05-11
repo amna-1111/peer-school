@@ -6,6 +6,7 @@ import { getInstructorSkills } from "../api/skillApi";
 import { getProfile } from "../api/userApi";
 import { getAvailableSlots } from "../api/sessionApi";
 import { getSkillById } from "../api/skillApi";
+import { getSkillReviews } from "../api/reviewApi";
 
 const CATEGORY_COLORS = {
   Programming: "bg-blue-100 text-blue-700",
@@ -25,6 +26,7 @@ export default function SkillDetail() {
   const [instructor, setInstructor] = useState(null);
   const [slots, setSlots] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     getSkillById(skillId)
@@ -34,6 +36,21 @@ export default function SkillDetail() {
         getAvailableSlots(data.instructor._id).then(({ data: s }) =>
           setSlots(s)
         );
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+
+    getSkillById(skillId)
+      .then(({ data }) => {
+        setSkill(data);
+        setInstructor(data.instructor);
+        Promise.all([
+          getAvailableSlots(data.instructor._id),
+          getSkillReviews(skillId)
+        ]).then(([slotsRes, reviewsRes]) => {
+          setSlots(slotsRes.data);
+          setReviews(reviewsRes.data);
+        });
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -180,6 +197,95 @@ export default function SkillDetail() {
                         minute: "2-digit"
                       })}
                     </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* Reviews for this skill */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-gray-800">
+                Reviews for this Skill
+              </h2>
+              {reviews.length > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-yellow-400 text-sm">⭐</span>
+                  <span className="text-sm font-semibold text-gray-700">
+                    {(
+                      reviews.reduce((sum, r) => sum + r.rating, 0) /
+                      reviews.length
+                    ).toFixed(1)}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    ({reviews.length} review{reviews.length !== 1 ? "s" : ""})
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {reviews.length === 0 ? (
+              <div className="text-center py-8 bg-gray-50 rounded-xl">
+                <p className="text-gray-400 text-sm font-medium">
+                  No reviews yet
+                </p>
+                <p className="text-gray-300 text-xs mt-1">
+                  Be the first to book and review this skill
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {reviews.map((review) => (
+                  <div
+                    key={review._id}
+                    className="p-4 bg-gray-50 rounded-xl border border-gray-100"
+                  >
+                    {/* Stars */}
+                    <div className="flex gap-0.5 mb-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`text-sm ${star <= review.rating ? "text-amber-400" : "text-gray-200"}`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Comment */}
+                    {review.comment && (
+                      <p className="text-gray-600 text-sm leading-relaxed mb-3 italic">
+                        "{review.comment}"
+                      </p>
+                    )}
+
+                    {/* Reviewer */}
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold overflow-hidden">
+                        {review.reviewer?.profilePhoto ? (
+                          <img
+                            src={`http://localhost:5000${review.reviewer.profilePhoto}`}
+                            className="w-full h-full object-cover"
+                            alt={review.reviewer.name}
+                          />
+                        ) : (
+                          review.reviewer?.name?.charAt(0).toUpperCase()
+                        )}
+                      </div>
+                      <span className="text-xs font-semibold text-gray-500">
+                        {review.reviewer?.name}
+                      </span>
+                      <span className="text-xs text-gray-300 ml-auto">
+                        {new Date(review.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric"
+                          }
+                        )}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>

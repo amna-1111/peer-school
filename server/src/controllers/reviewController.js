@@ -75,4 +75,31 @@ const getSessionReview = async (req, res, next) => {
   }
 };
 
-module.exports = { createReview, getInstructorReviews, getSessionReview };
+const getSkillBySession = async (req, res, next) => {
+  try {
+    const Session = require("../models/Session");
+
+    // Find all completed sessions for this skill
+    const sessions = await Session.find({
+      skillListing: req.params.skillId,
+      status: "Completed"
+    });
+
+    const sessionIds = sessions.map((s) => s._id);
+
+    const reviews = await Review.find({ session: { $in: sessionIds } })
+      .populate("reviewer", "name profilePhoto")
+      .sort({ createdAt: -1 });
+
+    res.json(reviews);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  createReview,
+  getInstructorReviews,
+  getSessionReview,
+  getSkillBySession
+};
