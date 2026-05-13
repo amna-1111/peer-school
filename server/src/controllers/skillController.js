@@ -6,7 +6,10 @@ const getSkills = async (req, res, next) => {
     const { category, search } = req.query;
     const filter = {};
     if (category) filter.category = category;
-    if (search) filter.title = { $regex: search, $options: "i" };
+    if (search) {
+      filter.title = { $regex: search, $options: "i" };
+    }
+    //if (search) filter.description = { $regex: search };
 
     const skills = await SkillListing.find(filter)
       .populate("instructor", "name avgRating profilePhoto")
