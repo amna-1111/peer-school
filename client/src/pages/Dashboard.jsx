@@ -64,7 +64,7 @@ export default function Dashboard() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="text-3xl font-extrabold text-white mb-2">
-              Welcome back, {user?.name.split(" ")[0]}! 👋
+              Welcome back, {user?.name.split(" ")[0]}!
             </h1>
             <p className="text-blue-100 font-medium opacity-90">
               Ready to learn or teach something new today?
