@@ -113,7 +113,7 @@ export default function Review() {
               <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-base overflow-hidden shrink-0">
                 {session.instructor?.profilePhoto ? (
                   <img
-                    src={`http://localhost:5000${session.instructor.profilePhoto}`}
+                    src={`${import.meta.env.VITE_API_URL}${session.instructor.profilePhoto}`}
                     alt={session.instructor.name}
                     className="w-full h-full object-cover"
                   />
