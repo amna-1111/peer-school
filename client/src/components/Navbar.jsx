@@ -75,7 +75,7 @@ export default function Navbar() {
               <div className="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs shadow overflow-hidden">
                 {user.profilePhoto ? (
                   <img
-                    src={`http://localhost:5000${user.profilePhoto}`}
+                    src={`${import.meta.env.VITE_API_URL}${user.profilePhoto}`}
                     alt={user.name}
                     className="w-full h-full object-cover"
                   />
