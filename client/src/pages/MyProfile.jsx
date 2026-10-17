@@ -93,7 +93,7 @@ export default function MyProfile() {
         skillsWanted: data.skillsWanted || []
       });
       if (data.profilePhoto)
-        setPhotoPreview(`http://localhost:5000${data.profilePhoto}`);
+        setPhotoPreview(`${import.meta.env.VITE_API_URL}${data.profilePhoto}`);
     });
     getInstructorSkills(user.id).then(({ data }) => setSkills(data));
     getAvailableSlots(user.id).then(({ data }) => setSlots(data));
