@@ -22,7 +22,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 //Routes
 
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/UserRoutes");
+const userRoutes = require("./routes/userRoutes");
 const skillRoutes = require("./routes/skillRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
