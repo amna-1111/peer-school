@@ -264,7 +264,7 @@ export default function SkillDetail() {
                       <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold overflow-hidden">
                         {review.reviewer?.profilePhoto ? (
                           <img
-                            src={`http://localhost:5000${review.reviewer.profilePhoto}`}
+                            src={`${import.meta.env.VITE_API_URL}${review.reviewer.profilePhoto}`}
                             className="w-full h-full object-cover"
                             alt={review.reviewer.name}
                           />
@@ -302,7 +302,7 @@ export default function SkillDetail() {
                 <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold mb-3 overflow-hidden shadow">
                   {instructor.profilePhoto ? (
                     <img
-                      src={`http://localhost:5000${instructor.profilePhoto}`}
+                      src={`${import.meta.env.VITE_API_URL}${instructor.profilePhoto}`}
                       alt={instructor.name}
                       className="w-full h-full object-cover"
                     />
