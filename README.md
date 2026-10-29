@@ -133,6 +133,24 @@ The frontend communicates with the backend through API requests. Environment var
 - Users can only modify resources they are authorized to manage.
 - Environment variables keep database credentials and other secrets out of the source code.
 
+## Screenshots
+Following are some screenshots of the website, you can view the full app on the link given above under Live Demo:
+
+# Homepage
+<img width="1900" height="910" alt="Screenshot 2026-10-29 175357" src="https://github.com/user-attachments/assets/129d9781-a1d0-453d-bca5-aaa76559d97e" />
+
+# Browse Skills Page
+<img width="1902" height="907" alt="Screenshot 2026-10-29 175411" src="https://github.com/user-attachments/assets/7e0698dc-c076-4fc2-8dbc-a52f0d2d9323" />
+
+# Booking Page
+<img width="1900" height="911" alt="Screenshot 2026-10-29 175426" src="https://github.com/user-attachments/assets/9877ccbe-8edd-4ecf-b06a-b9d1dc993844" />
+
+# Profile Page
+<img width="1897" height="906" alt="Screenshot 2026-10-29 175459" src="https://github.com/user-attachments/assets/8200be9b-ef9c-4e2d-96ed-2af922e354b7" />
+<img width="1901" height="905" alt="Screenshot 2026-10-29 175509" src="https://github.com/user-attachments/assets/bdafeca1-8214-4aa5-8dcc-9bb3bf1d54f6" />
+
+
+
 
 ---
 
